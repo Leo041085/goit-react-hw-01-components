@@ -1,31 +1,36 @@
 import PropTypes from 'prop-types'
-export const Statistics = ({ evt, title, stats }) => {
-    return <section className="statistics">
-  <h2 className="title">Upload stats</h2>
+import { StatisticsLi, StatisticsStyled, Title } from './StatisticsStyles';
 
-  <ul className="stat-list">
-    <li className="item">
-      <span className="label">.docx</span>
-      <span className="percentage">4%</span>
-    </li>
-    <li className="item">
-      <span className="label">.mp3</span>
-      <span className="percentage">14%</span>
-    </li>
-    <li className="item">
-      <span className="label">.pdf</span>
-      <span className="percentage">41%</span>
-    </li>
-    <li className="item">
-      <span className="label">.mp4</span>
-      <span className="percentage">12%</span>
-    </li>
+export const Statistics = (props) => {
+    function generateRandomHexColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+    return <StatisticsStyled>
+        {props.title && <Title>{props.title}</Title>}
+        <ul className="stat-list">
+            {props.stats.map(data => {
+                return (
+                    <StatisticsLi key={data.id} color={generateRandomHexColor()} className="item">
+                        <span className="label">{data.label}</span>
+                        <span className="percentage">{data.percentage}%</span>
+                    </StatisticsLi>)
+            })}
   </ul>
-</section>
+</StatisticsStyled>
 }
 
 Statistics.propTypes = {
-    evt: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    stats: PropTypes.array.isRequired
+    title: PropTypes.string,
+    stats: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired,
+            percentage: PropTypes.number.isRequired
+        })
+    ).isRequired
 }
